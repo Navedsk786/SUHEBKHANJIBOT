@@ -1,7 +1,7 @@
 {
-  "name": "Aadi-babu",
+  "name": "Priyansh",
   "version": "10.1.1",
-  "description": "A simple Facebook Messenger Bot made by 𝐀𝐚𝐝𝐢 𝐛𝐚𝐛𝐮 .",
+  "description": "A simple Facebook Messenger Bot made by 𝐏𝐫𝐢𝐲𝐚𝐧𝐬𝐡 𝐑𝐚𝐣𝐩𝐮𝐭.",
   "main": "Priyansh.js",
   "engines": {
       "node": "20.x",
@@ -26,7 +26,7 @@
       "prince",
       "mental"
   ],
-  "author": "𝐎𝐰𝐧𝐞𝐫 ➻  𝐀𝐚𝐝𝐢 𝐛𝐚𝐛𝐮 ",
+  "author": "𝐏𝐫𝐢𝐲𝐚𝐧𝐬𝐡 𝐑𝐚𝐣𝐩𝐮𝐭",
   "license": "GPL-3.0",
   "bugs": {
       "url": "https://github.com/Priyansh-11/Priyansh-bot/issues"
@@ -61,7 +61,7 @@
       "figlet": "^1.5.2",
       "form-data": "^4.0.0",
       "fs-extra": "^10.1.0",
-      "googlethis": "^1.2.9",,
+      "googlethis": "^1.2.9",
       "https": "^1.0.0",
       "idioms": "0.0.2",
       "image-downloader": "^4.3.0",
