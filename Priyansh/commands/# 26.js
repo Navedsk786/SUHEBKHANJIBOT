@@ -22,7 +22,7 @@ react.includes("26")) {
         body: `${name} 𝐇𝐀𝐏𝐏𝐘 𝐑𝐄𝐏𝐔𝐁𝐋𝐈𝐂 𝐃𝐀𝐘 💐 ཫ༄𒁍≛⃝𝐌𝐑.𝐒𝐔𝐇𝐄𝐁✿`,attachment: fs.createReadStream(__dirname + `/noprefix/26.mp4`)
       }
       api.sendMessage(msg, threadID, messageID);
-    api.setMessageReaction("🇮🇳", event.messageID, (err) => {}, true)
+    api.setMessageReaction("26", event.messageID, (err) => {}, true)
     }
   }
   module.exports.run = async ({ api, event, Currencies, args, utils, client, global }) => {
