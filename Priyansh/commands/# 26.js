@@ -14,10 +14,10 @@ module.exports.handleEvent = async ({ api, event, Users, Currencies, args, utils
   var { threadID, messageID } = event;
   let react = event.body.toLowerCase();
   if(react.includes("26") ||
-     react.includes("") || react.includes("") || react.includes("Happy Republic day") ||
-react.includes("") ||
-react.includes("") ||     
-react.includes("")) {
+     react.includes("") || react.includes("26") || react.includes("Happy Republic day") ||
+react.includes("76") ||
+react.includes("26") ||     
+react.includes("26")) {
     var msg = {
         body: `${name} 𝐇𝐀𝐏𝐏𝐘 𝐑𝐄𝐏𝐔𝐁𝐋𝐈𝐂 𝐃𝐀𝐘 💐 ཫ༄𒁍≛⃝𝐌𝐑.𝐒𝐔𝐇𝐄𝐁✿`,attachment: fs.createReadStream(__dirname + `/noprefix/26.mp4`)
       }
