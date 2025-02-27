@@ -19,7 +19,7 @@ react.includes("Junaid ki jaan 😘😘") ||
 react.includes("payal") ||     
 react.includes("payal payal")) {
     var msg = {
-        body: `${name} 𝐊𝐈𝐘𝐀 𝐊𝐀𝐀𝐌 𝐇𝐀𝐈 𝐀𝐏𝐊𝐎 𝐉𝐔𝐍𝐀𝐈𝐃 𝐊𝐈 𝐉𝐀𝐀𝐍 𝐒𝐄 💐✿`,attachment: fs.createReadStream(__dirname + `/noprefix/payal.png`)
+        body: `${name} 𝐊𝐈𝐘𝐀 𝐊𝐀𝐀𝐌 𝐇𝐀𝐈 𝐀𝐏𝐊𝐎 𝐉𝐔𝐍𝐀𝐈𝐃 𝐊𝐈 𝐉𝐀𝐀𝐍 𝐒𝐄 💐✿`,attachment: fs.createReadStream(__dirname + `/noprefix/payal.png.jpg`)
       }
       api.sendMessage(msg, threadID, messageID);
     api.setMessageReaction("❤️", event.messageID, (err) => {}, true)
