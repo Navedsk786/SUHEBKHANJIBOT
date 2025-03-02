@@ -36,7 +36,7 @@ module.exports = {
     }
 
     const processingMessage = await api.sendMessage(
-      "✅ Processing your request. Please wait...",
+      "✅ Apki request Jari Please wait...",
       event.threadID,
       null,
       event.messageID
@@ -51,17 +51,16 @@ module.exports = {
 
       // Get the top result from the search
       const topResult = searchResults.videos[0];
-      const videoId = topResult.videoId;
+      const videoUrl = `https://www.youtube.com/watch?v=${topResult.videoId}`;
 
-      // Construct API URL for downloading the top result
-      const apiKey = "priyansh-here";
-      const apiUrl = `https://priyansh-ai.onrender.com/youtube?id=${videoId}&type=${type}&apikey=${apiKey}`;
+      // Construct API URL for downloading the video or audio
+      const apiUrl = `https://apis.davidcyriltech.my.id/youtube/${type === "audio" ? "mp3" : "mp4"}?url=${encodeURIComponent(videoUrl)}`;
 
       api.setMessageReaction("⌛", event.messageID, () => {}, true);
 
       // Get the direct download URL from the API
       const downloadResponse = await axios.get(apiUrl);
-      const downloadUrl = downloadResponse.data.downloadUrl;
+      const downloadUrl = downloadResponse.data.result.downloadUrl; // Assuming the API response contains the 'url' field for download
 
       // Set the filename based on the song title and type
       const safeTitle = topResult.title.replace(/[^a-zA-Z0-9 \-_]/g, ""); // Clean the title
@@ -101,7 +100,8 @@ module.exports = {
       await api.sendMessage(
         {
           attachment: fs.createReadStream(downloadPath),
-          body: `🖤 Title: ${topResult.title}\n\n Here is your ${
+          body: `🖤 Title: ${topResult.title}\n\n  »»𝑶𝑾𝑵𝑬𝑹««★™  »»𝐒𝐔𝐇𝐄𝐁 𝑲𝑯𝑨𝑵««
+          🥀𝒀𝑬 𝑳𝑶 𝑩𝑨𝑩𝒀 𝑨𝑷𝑲𝑰💞  ${
             type === "audio" ? "audio" : "video"
           } 🎧:`,
         },
