@@ -2,7 +2,7 @@ const axios = require("axios");
 const fs = require("fs-extra");
 
 module.exports.config = {
-    name: "Name",
+    name: "pinterest",
     version: "1.0.0",
     hasPermssion: 0,
     credits: "SHAAN",
