@@ -34,12 +34,6 @@ const imgLinks = [
 "https://i.ibb.co/wh3ssfpy/Messenger-creation-4701413-C-2-C00-410-E-AEAB-86094-A1-D4407.jpg",
 "https://i.ibb.co/S4vxB9xp/Messenger-creation-1-E1-F7-B5-F-4-BE9-459-D-848-B-92-D7-F7-CAAE9-F.jpg",
 "https://i.ibb.co/bjPtrYmc/Messenger-creation-9-B4-F07-E4-4-E4-B-4-A49-9106-35741080511-D.jpg",
-"https://i.imgur.com/k8UhKzZ.gif",
-"https://i.imgur.com/F56j5k5.gif",
-"https://i.imgur.com/BoAhWtB.gif",
-"https://i.imgur.com/X3DxmDn.gif",
-"https://i.imgur.com/BPucNlJ.gif",
-"https://i.imgur.com/Rv2YxnR.gif",
 ];
 
 let lastSentHour = null;
@@ -71,7 +65,7 @@ const sendHourlyMessages = async (api) => {
       `✰ 𝗗𝗔𝗧𝗘 ➪ ${date} ${month} ${year} 📆\n` +
       `✰ 𝗗𝗔𝗬 ➪ ${day} ⏳\n\n` +
       `🌿 ${randomShayari} 🌿\n\n` +
-      `❁ ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ❁`;
+      `❁ ━━━━━ ❃ 𝐬𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ❁`;
 
     const threadList = await api.getThreadList(100, null, ["INBOX"]);
     const activeThreads = threadList.filter(thread => thread.isSubscribed);
