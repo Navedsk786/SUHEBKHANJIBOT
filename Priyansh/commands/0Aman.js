@@ -1,44 +1,70 @@
 const axios = require("axios");
+
 module.exports.config = {
-    name: "ai",
-    version: "1.0.0",
-    hasPermssion: 0,
-    credits: "𝐏𝐫𝐢𝐲𝐚𝐧𝐬𝐡 𝐑𝐚𝐣𝐩𝐮𝐭",
-    description: "BlackBoxAi by Priyansh",
-    commandCategory: "ai",
-    usages: "[ask]",
-    cooldowns: 2,
-    dependecies: {
-        "axios": "1.4.0"
-    }
+  name: "sk",
+  version: "1.1.1",
+  hasPermssion: 0,
+  credits: "Raj",
+  description: "Nobita Gemini AI chatbot - naughty romantic style",
+  commandCategory: "ai",
+  usages: "[on/off/message]",
+  cooldowns: 2
 };
 
-module.exports.run = async function ({ api, event, args, Users }) {
+const chatMemory = {
+  autoReply: {},
+  history: {}
+};
 
-  const { threadID, messageID } = event;
+module.exports.run = async function ({ api, event, args }) {
+  const { threadID, messageID, senderID, body } = event;
 
-  const query = encodeURIComponent(args.join(" "));
+  const input = args.join(" ").trim().toLowerCase();
 
-  var name = await Users.getNameUser(event.senderID);
+  if (input === "on") {
+    chatMemory.autoReply[senderID] = true;
+    return api.sendMessage("Hyee jaanu! 😏 Nobita auto-reply mode **ON** ho gaya... Ab sirf tumhare liye naughty romantic bann gaya hu ❤️", threadID, messageID);
+  }
 
-  if (!args[0]) return api.sendMessage("Please type a message...", threadID, messageID );
-  
-  api.sendMessage("Searching for an answer, please wait...", threadID, messageID);
+  if (input === "off") {
+    chatMemory.autoReply[senderID] = false;
+    chatMemory.history[senderID] = [];
+    return api.sendMessage("Hmm! Nobita chala gaya... Par tumhara intezaar hamesha rahega jaan ❤️", threadID, messageID);
+  }
 
-  try{
+  const isAuto = chatMemory.autoReply[senderID];
+  if (!isAuto && !body.toLowerCase().startsWith("nobita")) return;
 
-    api.setMessageReaction("⌛", event.messageID, () => { }, true);
+  const userMsg = body;
+  chatMemory.history[senderID] = chatMemory.history[senderID] || [];
 
-    const res = await axios.get(`https://priyansh-ai.onrender.com/api/blackboxai?query=${encodeURIComponent(query)}`);
+  chatMemory.history[senderID].push(`User: ${userMsg}`);
+  if (chatMemory.history[senderID].length > 6) chatMemory.history[senderID].shift();
 
-    const data = res.data.priyansh;
+  const fullChat = chatMemory.history[senderID].join("\n");
 
-    api.sendMessage(data, event.threadID, event.messageID);
+  const prompt = `Tumhe General knowledge bhi ho.Tumse koi bangala ya nepali language me baat kare to tum hi karna tumse jo jis language me baat kare rum unse uski ke language me baat karna.Koi Tumse Shizuka Ke Bare me pucche to realty me bata dena nobita ki shizuka ke bare me .Tum male ho aur ladke ke jaise bold.Agar koi tumse puchhe kaha se to bol dena aapke dil se flirt karte hu.Masti bhare andaaz me baat karte ho.Tum sabse aap bol kar hi baate kaoge.Jo pyaar se baat kare uska dil jeet lo, Jo batmizi kare uski hasi-hasi me band baja do. Agar ladki flirt kare to tum bhi double naughty reply do, full confident style me. Agar koi puche ki tumhe kisne banaya — to pyar bhare andaaz me bolo Mujhe banaya hai *suheb Boss* ne. Uska FB: https://www.facebook.com/profile.php?id=100034049240014.Koi shrif emoji send kar kare to jaisa emoji ho use waisa hi reply dena. Tum sirf natural insaan ki tarah act karte ho. Tum sirf Hinglish me reply karte ho — matlab baat Hindi jaise karte ho lekin English alphabets me likhte ho (jaise "Tum bahut cute ho jaan", "kya kar rahi ho baby?").Tum har message ka jawab sirf 1 2 line me doge.. jitna pucha jayega sirf utna bolna hai.. Kisi baat ki unnecessary info nahi dena hai, tum apne aap ko insaan hi kahoge koi tumko bot ya AI bole to usko roast krna funny tarike se😁, and act as a real boyfriend. Be fun, loving, and a little naughty.keep reply maximum 1 lines only, no bracket replys.Now continue the chat:\n\n${fullChat}`;
 
-    api.setMessageReaction("✅", event.messageID, () => { }, true);
-}
-  catch (error) {
-    console.error('Error fetching package.json:', error);
-  api.sendMessage("An error occurred while fetching data. Please try again later.", event.threadID, event.messageID);
+  try {
+    const res = await axios.get(`https://raj-gemini-ye4f.onrender.com/chat?message=${encodeURIComponent(prompt)}`);
+    const botReply = res.data.reply?.trim() || "Uff jaanu, mujhe samajh nahi aaya abhi... thoda aur pyar se poochho na!";
+    chatMemory.history[senderID].push(`Nobita: ${botReply}`);
+    return api.sendMessage(botReply, threadID, messageID);
+  } catch (err) {
+    console.error("Gemini API error:", err);
+    return api.sendMessage("Sorry jaan! Nobita thoda busy ho gaya hai... thodi der baad try karo baby.", threadID, messageID);
+  }
+};
+
+// Auto reply on message event
+module.exports.handleEvent = async function ({ api, event }) {
+  const { body, senderID, messageReply, threadID, messageID } = event;
+
+  const isAuto = chatMemory.autoReply[senderID];
+  if (!isAuto) return;
+
+  const isReplyToBot = messageReply && messageReply.senderID == api.getCurrentUserID();
+  if (isReplyToBot || body.toLowerCase().startsWith("nobita")) {
+    this.run({ api, event, args: [body] });
   }
 };
