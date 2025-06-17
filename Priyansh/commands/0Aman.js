@@ -23,7 +23,7 @@ module.exports.run = async function ({ api, event, args }) {
 
   if (input === "on") {
     chatMemory.autoReply[senderID] = true;
-    return api.sendMessage("Hyee jaanu! 😏 Nobita auto-reply mode **ON** ho gaya... Ab sirf tumhare liye naughty romantic bann gaya hu ❤️", threadID, messageID);
+    return api.sendMessage("Hyee jaanu! 😏 Nobita  auto-reply mode **ON** ho gaya... Ab sirf tumhare liye naughty romantic bann gaya hu ❤️", threadID, messageID);
   }
 
   if (input === "off") {
