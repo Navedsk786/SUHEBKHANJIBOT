@@ -53,7 +53,7 @@ https://www.facebook.com/suheb.khanjii?
 
 🌐Insta : SUHEB.K
 
-⚠️𝐈𝐭𝐧𝐢 𝐈𝐧𝐟𝐨𝐫𝐦𝐚𝐭𝐢𝐨𝐧 𝐊𝐚𝐟𝐢 𝐇𝐚𝐢.🫢 `, attachment: fs.createReadStream(__dirname + "/cache/botjoin.mp4")} ,threadID));
+⚠️𝐈𝐭𝐧𝐢 𝐈𝐧𝐟𝐨𝐫𝐦𝐚𝐭𝐢𝐨𝐧 𝐊𝐚𝐟𝐢 𝐇𝐚𝐢.🫢 `, attachment: fs.createReadStream(__dirname + "/cache/botjoin (1).mp4")} ,threadID));
 	}
 	else {
 		try {
