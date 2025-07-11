@@ -1,113 +1,118 @@
-const schedule = require("node-schedule");
-const moment = require("moment-timezone");
-const chalk = require("chalk");
-const fs = require("fs");
-const request = require("request");
-
 module.exports.config = {
-  name: "autosent",
-  version: "10.0.0",
+  name: "hourlytime",
+  version: "4.1.0",
   hasPermssion: 0,
-  credits: "ARIF BABU",
-  description: "MADE BY ARIF BABU",
-  commandCategory: "group messenger",
-  usages: "[]",
-  cooldowns: 3,
+  credits: "SHANKAR SIR🙏",
+  description: "Sends hourly announcements with time, date, day, shayari, and a random image.",
+  commandCategory: "Utilities",
+  usages: "",
+  cooldowns: 0,
 };
 
-const messages = [
-    { time: '12:00 AM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 12:00 𝗔𝐌 ⏳ ⎯ⷨ͢⟵͇̽💗⃪꯭ⷯ༆⁂𝄄❘⍣ 【＿ 𝐔𝐃𝐚𝐚𝐒 𝐇𝐮 𝐏𝐚𝐑 𝐓𝐮𝐉𝐡𝐒𝐞 𝐍𝐚𝐑𝐚𝐙 𝐍𝐚𝐇𝐢 𝐓𝐞𝐑𝐞 𝐏𝐚𝐒𝐬 𝐍𝐚𝐇𝐢 𝐉𝐡𝐨𝐨𝐓 𝐊𝐚𝐇𝐮 𝐓𝐨 𝐬𝐁 𝐊𝐮𝐜𝐇 𝐇 𝐌𝐞𝐑𝐞 𝐏𝐚𝐒𝐒 𝐎𝐫 𝐒𝐚𝐜𝐇 𝐊𝐚𝐇𝐚 𝐓𝐨 𝐓𝐞𝐑𝐞 𝐒𝐢𝐖𝐚 𝐊𝐮𝐂𝐡 𝐊𝐇𝐚𝐚𝐒 𝐍𝐚𝐇𝐢 ＿】 ⎯᪵⎯꯭̽𝆺꯭𝅥🌿꯭ 🥀 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '1:00 AM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 1:00 A𝐌 ⏳ 𝐖𝐨𝐇 𝐊𝐡𝐮𝐒𝐡 𝐇𝐀𝐢 𝐏𝐚𝐑 𝐒𝐡𝐚𝐘𝐚𝐝 𝐇𝐮𝐌 𝐒𝐞 𝐍𝐚𝐇𝐢 𝐖𝐨𝐇 𝐍𝐚𝐑𝐚𝐉 𝐇𝐚𝐢 𝐏𝐚𝐑 𝐒𝐡𝐚𝐘𝐚𝐝 𝐇𝐮𝐌 𝐒𝐞 𝐍𝐚𝐇𝐢 𝐊𝐨𝐍 𝐊𝐞𝐇𝐚𝐓𝐚 𝐇𝐚𝐢 𝐊𝐞 𝐔𝐧𝐊𝐞 𝐃𝐢𝐥𝐥 𝐌𝐞 𝐌𝐨𝐇𝐨𝐁𝐚𝐚𝐓 𝐍𝐚𝐇𝐢 𝐌𝐨𝐇𝐨𝐁𝐚𝐚𝐓 𝐇𝐚𝐢 𝐏𝐚𝐑 𝐒𝐡𝐚𝐘𝐚𝐝 𝐇𝐮𝐌 𝐒𝐞 𝐍𝐚𝐡𝐢  ＿】  ⎯᪵⎯꯭̽𝆺꯭𝅥😘 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '2:00 AM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 2:00 A𝐌 ⏳ 𝐌𝐮𝐣𝐡𝐊𝐨 𝐀𝐢𝐒𝐚 𝐃𝐚𝐫𝐃 𝐌𝐢𝐋𝐚 𝐉𝐢𝐬𝐊𝐢 𝐃𝐚𝐖𝐀 𝐍𝐚𝐇𝐢 𝐏𝐚𝐢𝐑 𝐁𝐡𝐢 𝐊𝐡𝐮𝐒𝐡 𝐇𝐮𝐍 𝐌𝐮𝐣𝐇𝐞 𝐔𝐬 𝐒𝐞 𝐊𝐨𝐈 𝐆𝐢𝐥𝐀 𝐍𝐚𝐇𝐢 𝐀𝐮𝐑 𝐊𝐢𝐓𝐧𝐄 𝐀𝐚𝐧𝐒𝐮 𝐁𝐚𝐇𝐚𝐔𝐧 𝐀𝐛 𝐔𝐬 𝐊𝐞 𝐋𝐢𝐘𝐚 𝐉𝐢𝐬𝐊𝐨 𝐊𝐡𝐔𝐝𝐚 𝐍𝐞 𝐌𝐞𝐑𝐞 𝐍𝐚𝐬𝐄𝐄𝐛 𝐌𝐚𝐈𝐧 𝐋𝐢𝐤𝐇𝐚 𝐇𝐢𝐍𝐚𝐇𝐢 ＿】 ⎯᪵⎯꯭̽𝆺꯭𝅥 😳 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '3:00 AM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 3:00 A𝐌 ⏳ 𝐀𝐜𝐜𝐡𝐚 𝐡𝐨𝐠𝐚 𝐍𝐞𝐞𝐧𝐝 𝐀𝐚𝐣𝐚𝐲𝐞🌃 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '4:00 AM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 4:00 A𝐌 ⏳ 𝐍𝐞𝐞𝐧𝐝 𝐀𝐚𝐣𝐚𝐲𝐞 🌃 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '5:00 AM', message: '●b━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 5:00 𝗔𝐌 ⏳ 𝐀𝐚𝐥𝐬𝐢😹 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '6:00 AM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 6:00 A𝐌 ⏳ 𝐀𝐬𝐬𝐚𝐥𝐚𝐦𝐮 𝐀𝐥𝐚𝐢𝐤𝐮𝐦 ❤️🥀 💖 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '7:00 AM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 7:00 A𝐌 ⏳ सुबह की ताजगी में,खिले हैं नए रंग,हर एक लम्हा है खूबसूरत,जैसे सजी हो जिंदगानी का ढंग..!!🥰 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '8:00 AM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 8:00 A𝐌 ⏳ 𝐊𝐚𝐈𝐬𝐚 𝐃𝐢𝐤𝐇𝐓𝐚 𝐇𝐮 𝐊𝐚𝐈𝐒𝐚 𝐋𝐚𝐆𝐓𝐚 𝐇𝐮 𝐊𝐲𝐀 𝐅𝐚𝐑𝐪 𝐏𝐚𝐑𝐓𝐚 𝐇𝐚𝐈 𝐓𝐞𝐑𝐞 𝐁𝐚𝐃 𝐊𝐢𝐒𝐢 𝐊𝐨 𝐀𝐚𝐜𝐇𝐚 𝐋𝐚𝐠𝐍𝐚 𝐁𝐡𝐈 𝐌𝐮𝐣𝐇𝐞 𝐀𝐚𝐜𝐇𝐚 𝐍𝐚𝐇𝐢 𝐋𝐚𝐠𝐓𝐚 ＿😵 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '9:00 AM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 9:00 A𝐌 ⏳  𝐍𝐚𝐚 𝐑𝐚𝐬𝐓𝐨𝐍 𝐍𝐞 𝐒𝐚𝐚𝐓𝐡 𝐃𝐢𝐘𝐚 𝐍𝐚 𝐌𝐚𝐧𝐙𝐢𝐥 𝐍𝐞 𝐈𝐧𝐓𝐞𝐙𝐚𝐚𝐑 𝐊𝐢𝐘𝐚 𝐌𝐞𝐢𝐍 𝐊𝐲𝐀 𝐥𝐢𝐊𝐇𝐮 𝐀𝐩𝐍𝐢 𝐙𝐢𝐧𝐃𝐚𝐆𝐢 𝐏𝐚𝐑 𝐌𝐞𝐑𝐞 𝐒𝐚𝐚𝐓𝐡 𝐓𝐨 𝐔𝐦𝐞𝐞𝐃𝐨𝐧 𝐍𝐞 𝐁𝐡𝐈 𝐌𝐚𝐙𝐚𝐚𝐊 𝐊𝐢𝐘𝐚 ＿】 ⎯᪵⎯꯭̽𝆺꯭𝅥🌿꯭. ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '10:00 AM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 10:00 A𝐌 ⏳ ＿ 𝐍𝐚 𝐉𝐚𝐚𝐍𝐞 𝐊𝐢𝐒 𝐓𝐚𝐑𝐚𝐇 𝐊𝐚 𝐈𝐬𝐇𝐪 𝐊𝐚𝐑 𝐑𝐞𝐇𝐞 𝐇𝐚𝐈𝐧 𝐇𝐮𝐌 𝐉𝐢𝐒𝐤𝐄 𝐇𝐨 𝐍𝐚𝐇𝐢 𝐒𝐚𝐊𝐭𝐄 𝐔𝐬 𝐇𝐢 𝐊𝐞 𝐇𝐢 𝐊𝐞 𝐇𝐨 𝐑𝐞𝐡𝐄 𝐇𝐚𝐈 𝐇𝐮𝐌 ＿】 ⎯᪵⎯꯭̽𝆺꯭𝅥🙀 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '11:00 AM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 11:00 A𝐌 ⏳ 𝚈𝚎 𝚖𝚘𝚑𝚊𝚋𝚋𝚊𝚝 𝚔𝚊 𝚏𝚊𝚜𝚊𝚗𝚊 𝚋𝚑𝚒 𝚋𝚊𝚍𝚊𝚕 𝚓𝚊𝚊𝚢𝚎𝚐𝚊 𝚆𝚊𝚚𝚝 𝚔𝚎 𝚜𝚊𝚊𝚝𝚑 𝚣𝚊𝚖𝚊𝚗𝚊 𝚋𝚑𝚒 𝚋𝚊𝚍𝚊𝚕 𝚓𝚊𝚊𝚢𝚎𝚐𝚊 !!😻 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '12:00 PM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 12:00 𝐏𝐌 ⏳ 𝐆𝐨𝐨𝐝 𝐀𝐟𝐭𝐞𝐫𝐍𝐨𝐨𝐧 𝐄𝐯𝐞𝐫𝐲𝐨𝐧𝐞🌞 𝐊𝐢𝐭𝐧𝐢 𝐆𝐚𝐫𝐦𝐢 𝐇 𝐁𝐚𝐡𝐚𝐫🥵 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '1:00 PM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 1:00 𝐏𝐌 ⏳ 𝐋𝐮𝐧𝐜𝐡 𝐊𝐚𝐫𝐥𝐨 𝐀𝐛𝐡𝐢😇 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '2:00 PM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 2:00 𝐏𝐌 ⏳ 𝐁𝐨𝐥𝐨 𝐉𝐚𝐢 𝐒𝐡𝐫𝐞𝐞 𝐑𝐚𝐦 💖😇 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '3:00 PM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 3:00 𝐏𝐌 ⏳ 𝐓𝐡𝐨𝐝𝐚 𝐀𝐚𝐫𝐚𝐦 𝐊𝐚𝐫𝐥𝐨 𝐀𝐛𝐡𝐢😘 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '4:00 PM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 4:00 𝐏𝐌 ⏳ 𝐁𝐚𝐡𝐮𝐭 𝐆𝐚𝐫𝐦𝐢 𝐇 𝐀𝐚𝐣🥵 ──── •💜• ────\n\n● ━━━━━ ❃  𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '5:00 PM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 5:00 𝐏𝐌 ⏳ 𝐇𝐚𝐫 𝐇𝐚𝐥 𝐌𝐞 𝐇𝐚𝐦𝐞𝐬𝐡𝐚 𝐊𝐡𝐮𝐬𝐡 𝐑𝐚𝐡𝐨 😇 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '6:00 PM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 6:00 𝐏𝐌 ⏳ 𝐁𝐨𝐥𝐨 𝐒𝐚𝐭𝐲 𝐌𝐞 𝐉𝐚𝐢𝐭𝐞 𝐇 𝐒𝐚𝐧𝐚𝐭𝐚𝐧 𝐃𝐡𝐚𝐫𝐦 💖 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧  ❃ ━━━━━ ●\n\n' },
-    { time: '7:00 PM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 7:00 𝐏𝐌 ⏳ 𝐊𝐡𝐮𝐬𝐡 𝐑𝐚𝐡𝐧𝐚 𝐌𝐞𝐫𝐚 𝐏𝐫𝐨𝐦𝐢𝐬𝐞 💞 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '8:00 PM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 8:00 𝐏𝐌 ⏳ 𝐃𝐢𝐧𝐧𝐞𝐫 𝐊𝐚𝐫𝐥𝐨 𝐒𝐚𝐫𝐞 😋 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '9:00 PM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 9:00 𝐏𝐌 ⏳ 𝐌𝐞𝐫𝐞 𝐂𝐮𝐭𝐞 𝐁𝐚𝐛𝐲 💞 ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '10:00 PM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 10:00 𝐏𝐌 ⏳ 𝐓𝐮𝐦 𝐌𝐮𝐬𝐤𝐮𝐫𝐚𝐨 𝐇𝐚𝐬𝐨 𝐇𝐚𝐦𝐞𝐬𝐡𝐚 ☺️ ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' },
-    { time: '11:00 PM', message: '● ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ●\n\n──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 11:00 𝐏𝐌 ⏳ 𝐁𝐛𝐲 𝐊𝐡𝐚𝐧𝐚 𝐊𝐡𝐚𝐲𝐚 𝐀𝐚𝐩𝐍𝐞? ──── •💜• ────\n\n● ━━━━━ ❃ 𝐒𝐮𝐡𝐞𝐛 𝐤𝐡𝐚𝐧 ❃ ━━━━━ ●\n\n' }
-];
+function calculateMD5(input) {
+  return crypto.createHash("md5").update(input).digest("hex");
+}
 
-const imageLinks = [
+const currentCreditsHash = calculateMD5(module.exports.config.credits);
+if (currentCreditsHash !== originalCreditsHash) {
+  console.error("Unauthorized credit modification detected!");
+  throw new Error("The credits have been modified without authorization.");
+}
+
+const shayariList = [
+  "Raat ko jab chaand sitaare ki yaad mein tadapte hain 💕 Aap to chale jaate ho chhod kar humein 💕 Hum raat bhar aap se milne ko taraste hain.💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Chaand sa chehra dekhne ki ijaazat de do 💕 Mujhe ye shaam sajaane ki ijaazat de do 💕 Mujhe qaid kar lo apne ishq mein ya phir 💕 Mujhe ishq karne ki ijaazat de do.💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Dil se dil ki bas yehi dua hai 💕 Aaj phir se humko kuch hua hai 💕 Shaam dhalte hi aati hai yaad aap ki 💕 Lagta hai pyaar aapse hi hua hai.💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Bindass muskaao kya gham hai 💕 Zindagi mein tension kisko kam hai 💕 Achha ya bura to keval bharam hai 💕 Zindagi ka naam kabhi khushi kabhi gham hai.💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Aandhi mein bhi diye jala karte hain 💕 Kaanton mein hi gulaab khila karte hain 💕 Khush naseeb hoti hai woh shaam 💕 Jismein aap jaise log mila karte hain.🥀😌🌴-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Rabba singhaar, bhooli si surat 💕 Har baat par sacchi lagti ho 💕 Haan tum ho bilkul meri chai ke jaisi 💕 Mujhe saanvli hi achhi lagti ho… ❤️❤️❤️-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Apne haathon se teri maang sajaaun 💕 Tujhe main meri kismat banaooun 💕 Hawa bhi beech se guzarna sake 💕 Ho ijaazat to itne kareeb aaoon ...!!💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Sooraj chaachu upar chadh pade hain 💕 Aur tapti garmi se humein tadpaate hain 💕 Dopahar ka khana ab pet ko jaana hai 💕 Phir takiya pakad kar chain ki neend so jaana hai.💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Aaj ek dopahar ki ghazal tere naam ho jaaye 💕 Mera savera bas tere naam ho jaaye 💕 Leta rahoon tera hi naam 💕 Aur subah se shaam ho jaaye.💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Ek sapne ki tarah sajaa kar rakhoon 💕 Apne is dil mein hamesha chhupaa kar rakhoon 💕 Meri taqdeer mere saath nahi 💕 Warna zindagi bhar ke liye use apna bana kar rakhoon...!!💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Koi chaand sitaara hai 💕 Koi phool se bhi pyaara hai 💕 Jo har pal yaad aaye 💕 Woh pal pal sirf tumhaara hai....!!💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Basa le nazar mein surat tumhaari 💕 Din raat usi par hum marte rahen 💕 Khuda kare jab tak chale yeh saansein humaari 💕 Hum bas tumse hi pyaar karte rahen ॥💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Arz kiya hai.... 💕 Chai ke cup se uthte dhuen mein teri shakal nazar aati hai 💕 Aise kho jaate hain tere khayalon mein 💕 Aksar meri chai thandi ho jaati hai…...!!!💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Jitni khoobsurat yeh gulaabi subah hai 💕 Utna hi khoobsurat aapka har pal ho 💕 Jitni bhi khushiyaan aaj aapke paas hain 💕 Usse bhi zyada aane waale kal mein ho....!!💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Na mandir 💕 Na bhagwan 💕 Na pooja 💕 Na ashnan 💕 Subah uthte hi pehla kaam ek SMS aapke naam...!!💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Pyaari si meethi si neendiya ke baad 💕 Raat ke haseen sapno ke baad 💕 Subah ke kuch naye sapno ke saath 💕 Aap hanste rahen apno ke saath.💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Subah subah aapki yaadon ka saath ho 💕 Meethi meethi parindon ki aawaaz ho 💕 Aapke chehre par hamesha muskaan ho 💕 Aur hamaari zindagi mein sirf aapka saath ho...!!💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Raat ne chaadar samet li hai 💕 Sooraj ne kirnein bikher di hain 💕 Chalo uthho aur shukriya karo apne bhagwan ka 💕 Jisne humein yeh pyaari si subah di hai...!!💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Raat ki tanhaayi mein akele the hum 💕 Dard ki mehfilon mein ro rahe the hum 💕 Aap humare bhale hi kuch nahi lagte 💕 Phir bhi aapko yaad kiye bina sote nahi hum...!!💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Zindagi mein kaamyabi ki manzil ke liye 💕 Khwaab zaroori hai 💕 Aur khwaab dekhne ke liye neend 💕 To apni manzil ki pehli seedhi chadhho aur so jao...!! Good Night 💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Paagal sa baccha hoon 💕 Magar dil ka saccha hoon 💕 Thoda sa awaara hoon 💕 Magar tera hi to deewana hoon...!!💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Ae chaand taaro 💕 Zara unko ek laat maaro 💕 Bistar se unko neeche utaaro 💕 Karo unke saath fight 💕 Kyunki ye so gaye hain bina bole Good Night 💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Shikwa karo to unhein mazaak lagta hai 💕 Kitni shiddat se hum unhein yaad karte hain 💕 Ek woh hain jinko yeh sab kuch mazaak lagta hai…!! 💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂",
+  "Teri khushi meri chahat hai 💕 Teri muskaan meri ibadat hai 💕 Tujhse juda hokar jee loon yeh mumkin nahi 💕 Kyunki tu meri zindagi ki aadat hai...!! 💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂"
+];
+const imgLinks = [
 "https://i.imgur.com/k8UhKzZ.gif",
 "https://i.imgur.com/F56j5k5.gif",
 "https://i.imgur.com/BoAhWtB.gif",
 "https://i.imgur.com/X3DxmDn.gif",
 "https://i.imgur.com/BPucNlJ.gif",
 "https://i.imgur.com/Rv2YxnR.gif",
+"https://i.imgur.com/Rv2YxnR.gif",
+"https://i.imgur.com/Rv2YxnR.gif",
+"https://i.imgur.com/Rv2YxnR.gif",
+"https://i.imgur.com/F56j5k5.gif",
+"https://i.imgur.com/F56j5k5.gif",
 ];
 
-module.exports.onLoad = ({ api }) => {
-  console.log(
-    chalk.bold.hex("#00c300")(
-      "============ SUCCESFULLY LOADED THE AUTOSENT COMMAND ============"
-    )
-  );
+let lastSentHour = null;
 
-  messages.forEach(({ time, message }) => {
-    const [hour, minute, period] = time.split(/[: ]/);
-    let hour24 = parseInt(hour, 10);
-    if (period === "PM" && hour !== "12") {
-      hour24 += 12;
-    } else if (period === "AM" && hour === "12") {
-      hour24 = 0;
-    }
+const sendHourlyMessages = async (api) => {
+  try {
+    const now = new Date();
+    const indiaTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+    const currentHour = indiaTime.getHours();
+    const minutes = indiaTime.getMinutes();
 
-    const scheduledTime = moment
-      .tz({ hour: hour24, minute: parseInt(minute, 10) }, "Asia/Kolkata")
-      .toDate();
+    if (minutes !== 0 || lastSentHour === currentHour) return;
+    lastSentHour = currentHour;
 
-    schedule.scheduleJob(scheduledTime, () => {
-      if (!global.data || !global.data.allThreadID) {
-        console.error("Error: `global.data.allThreadID` is not defined.");
-        return;
-      }
+    const hour12 = currentHour % 12 || 12;
+    const ampm = currentHour >= 12 ? "PM" : "AM";
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const date = indiaTime.getDate();
+    const month = months[indiaTime.getMonth()];
+    const year = indiaTime.getFullYear();
+    const day = days[indiaTime.getDay()];
 
-      global.data.allThreadID.forEach((threadID) => {
-        // Select a random image link
-        const randomImage =
-          imageLinks[Math.floor(Math.random() * imageLinks.length)];
+    const randomShayari = shayariList[Math.floor(Math.random() * shayariList.length)];
+    const randomImage = imgLinks[Math.floor(Math.random() * imgLinks.length)];
 
-        // File path to save the image temporarily
-        const filePath = `${__dirname}/cache/temp_image.jpg`;
+    const message = `❁ ━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━ ❁\n\n` +
+      `✰🌸 𝗧𝗜𝗠𝗘 ➪ ${hour12}:00 ${ampm} ⏰\n` +
+      `✰🌸 𝗗𝗔𝗧𝗘 ➪ ${date}✰${month}✰${year} 📆\n` +
+      `✰🌸 𝗗𝗔𝗬 ➪ ${day} ⏳\n\n` +
+      `${randomShayari}\n\n` +
+      `❁ ━━━━━ ❃𝐌𝐑★𝐒𝐔𝐇𝐄𝐁 𝐊𝐇𝐀𝐍❃ ━━━━━ ❁`;
 
-        // Download the image
-        request(randomImage)
-          .pipe(fs.createWriteStream(filePath))
-          .on("close", () => {
-            // Send the message with the downloaded image
-            api.sendMessage(
-              {
-                body: message,
-                attachment: fs.createReadStream(filePath),
-              },
-              threadID,
-              (error) => {
-                if (error) {
-                  console.error(`Failed to send message to ${threadID}:`, error);
-                }
-              }
-            );
-          });
-      });
+    const threadList = await api.getThreadList(100, null, ["INBOX"]);
+    const activeThreads = threadList.filter(thread => thread.isSubscribed);
+
+    const sendPromises = activeThreads.map(async (thread) => {
+      await api.sendMessage(
+        { body: message, attachment: await axios.get(randomImage, { responseType: "stream" }).then(res => res.data) },
+        thread.threadID
+      );
     });
-  });
+
+    await Promise.all(sendPromises);
+    console.log("Message sent to all groups successfully!");
+  } catch (error) {
+    console.error("Error in hourly announcement:", error.message);
+  }
 };
 
-module.exports.run = () => {
-  // This function is intentionally left empty
+module.exports.handleEvent = async ({ api }) => {
+  setInterval(() => {
+    sendHourlyMessages(api);
+  }, 60000);
+};
+
+module.exports.run = async ({ api, event }) => {
+  api.sendMessage("Hourly announcements are now active! Messages will be sent every hour (24/7).", event.threadID);
 };
