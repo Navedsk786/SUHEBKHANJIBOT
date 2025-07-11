@@ -46,17 +46,17 @@ const shayariList = [
   "Teri khushi meri chahat hai 💕 Teri muskaan meri ibadat hai 💕 Tujhse juda hokar jee loon yeh mumkin nahi 💕 Kyunki tu meri zindagi ki aadat hai...!! 💝💝💝-[𝐎𝐖𝐍𝐄𝐑 :- ꧁❀𓃮 𓆩𝐒𝐔𝐇𝐄𝐁𓆪 𓃮❀꧂"
 ];
 const imgLinks = [
-"https://i.imgur.com/k8UhKzZ.gif",
-"https://i.imgur.com/F56j5k5.gif",
-"https://i.imgur.com/BoAhWtB.gif",
-"https://i.imgur.com/X3DxmDn.gif",
-"https://i.imgur.com/BPucNlJ.gif",
-"https://i.imgur.com/Rv2YxnR.gif",
-"https://i.imgur.com/Rv2YxnR.gif",
-"https://i.imgur.com/Rv2YxnR.gif",
-"https://i.imgur.com/Rv2YxnR.gif",
-"https://i.imgur.com/F56j5k5.gif",
-"https://i.imgur.com/F56j5k5.gif",
+"https://i.ibb.co/SDPVKCHk/received-1658902918087737.jpg",
+"https://i.ibb.co/DPCjNvCn/received-1372477247338330.jpg",
+"https://i.ibb.co/ZzB513BD/received-1199306371647867.jpg",
+"https://i.ibb.co/S7vb9bNt/received-992977839702824.jpg",
+"https://i.ibb.co/CKyTr6K6/received-690751813426718.jpg",
+"https://i.ibb.co/NnJFrzLZ/received-660293663440253.jpg",
+"https://i.ibb.co/NnJFrzLZ/received-660293663440253.jpg",
+"https://i.ibb.co/NnJFrzLZ/received-660293663440253.jpg",
+"https://i.ibb.co/NnJFrzLZ/received-660293663440253.jpg",
+"https://i.ibb.co/LhspSYbB/received-552668450906408.jpg",
+"https://i.ibb.co/LhspSYbB/received-552668450906408.jpg",
 ];
 
 let lastSentHour = null;
@@ -88,7 +88,7 @@ const sendHourlyMessages = async (api) => {
       `✰🌸 𝗗𝗔𝗧𝗘 ➪ ${date}✰${month}✰${year} 📆\n` +
       `✰🌸 𝗗𝗔𝗬 ➪ ${day} ⏳\n\n` +
       `${randomShayari}\n\n` +
-      `❁ ━━━━━ ❃𝐌𝐑★𝐒𝐔𝐇𝐄𝐁 𝐊𝐇𝐀𝐍❃ ━━━━━ ❁`;
+      `❁ ━━━━━ ❃𝐌𝐑★𝐒𝐇𝐀𝐀𝐍❃ ━━━━━ ❁`;
 
     const threadList = await api.getThreadList(100, null, ["INBOX"]);
     const activeThreads = threadList.filter(thread => thread.isSubscribed);
